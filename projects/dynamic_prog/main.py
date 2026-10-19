@@ -1,5 +1,5 @@
-from utils import fib
-from edit_distance import levenshtein, damerau, edit_distance
+from edit_distance.metrics import similarity
+from edit_distance import damerau, levenshtein
 
 lines = """
 Винничук. Галицька кухня: історія, рецепти та обличчя: Біґос мисливський
@@ -24,12 +24,13 @@ def main():
     print(lines)
 
     for i in range(len(lines)):
-        for j in range(i+1, len(lines)):
-            metric = edit_distance(lines[i], lines[j])
-            if metric >= 0.75:
+        for j in range(i + 1, len(lines)):
+            levenshtein_similarity = similarity(lines[i], lines[j], algorithm=levenshtein)
+            damerau_similarity = similarity(lines[i], lines[j], algorithm=damerau)
+            if levenshtein_similarity >= 0.75 or damerau_similarity >= 0.75:
                 print(lines[i])
                 print(lines[j])
-                print(f"({i},{j}) = {metric * 100:.2f}%")
+                print(f"({i},{j}). Levenshtein: {levenshtein_similarity * 100:.2f}%, Damerau: {damerau_similarity * 100:.2f}%")
 
     # print(fib(10))
     # print(levenshtein("intention", "execution"), damerau("intention", "execution"))
